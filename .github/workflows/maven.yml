@@ -9,10 +9,7 @@
 name: Java CI with Maven
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,11 +23,20 @@ jobs:
       with:
         java-version: '17'
         distribution: 'corretto'
-        maven-version: 3.9.9
-        cache: maven
     - name: Build with Maven
     #  run: mvn -B package --file pom.xml
-      run: java -version && mvn -v
+      run: |
+        java -version && mvn -v
+        mkdir -p "${{ github.workspace }}/dist"
+        ls -la
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'corretto'
+      run: |
+        ls -la 
+        cd "${{ github.workspace }}/dist"
       
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
